@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Train Ticket Booking System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .content-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-bottom: 3px solid #764ba2;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #333;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            margin-top: 10px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(245, 87, 108, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(250, 112, 154, 0.4);
+        }
+
+        .train-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            transition: 0.3s;
+        }
+
+        .train-card:hover {
+            transform: translateX(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .train-card h3 {
+            margin-bottom: 10px;
+            font-size: 1.4em;
+        }
+
+        .train-info {
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        .booking-item {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            animation: slideIn 0.4s ease-out;
+        }
+
+        .booking-item h4 {
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .booking-details {
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+
+        .fare-display {
+            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            color: #333;
+        }
+
+        .fare-display h3 {
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        .fare-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 1.05em;
+        }
+
+        .fare-row .label {
+            font-weight: bold;
+        }
+
+        .fare-row .value {
+            color: #333;
+            font-weight: bold;
+        }
+
+        .no-data {
+            text-align: center;
+            color: #999;
+            padding: 30px;
+            font-size: 1.1em;
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            background: white;
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.05em;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            color: #333;
+            border-left: 4px solid #667eea;
+        }
+
+        .info-box h4 {
+            margin-bottom: 10px;
+            color: #667eea;
+        }
+
+        .info-box p {
+            margin-bottom: 5px;
+            font-size: 0.95em;
+        }
+
+        @media (max-width: 768px) {
+            .content-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            header h1 {
+                font-size: 2em;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚂 Train Ticket Booking System</h1>
+            <p>Book your tickets hassle-free!</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('booking')">Book Ticket</button>
+            <button class="tab-btn" onclick="switchTab('trains')">View Trains</button>
+            <button class="tab-btn" onclick="switchTab('bookings')">My Bookings</button>
+        </div>
+
+        <!-- Booking Tab -->
+        <div id="booking" class="tab-content active">
+            <div class="content-wrapper">
+                <div class="card">
+                    <h2>🎫 Book Your Ticket</h2>
+                    <div class="success-message" id="successMsg">✓ Ticket booked successfully!</div>
+                    
+                    <form onsubmit="bookTicket(event)">
+                        <div class="form-group">
+                            <label for="passenger">Passenger Name</label>
+                            <input type="text" id="passenger" required placeholder="Enter your name">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="train_no">Train No</label>
+                            <select id="train_no" required onchange="updateStations()">
+                                <option value="">Select Train</option>
+                                <option value="101">101 - Central Local</option>
+                                <option value="202">202 - Harbour Local</option>
+                                <option value="303">303 - Uran Local</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="start">From Station</label>
+                            <select id="start" required onchange="calculateFare()">
+                                <option value="">Select Start Station</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="end">To Station</label>
+                            <select id="end" required onchange="calculateFare()">
+                                <option value="">Select End Station</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="class">Class</label>
+                            <select id="class" required onchange="calculateFare()">
+                                <option value="">Select Class</option>
+                                <option value="SL">SL (Sleeper)</option>
+                                <option value="3AC">3AC (3-tier AC)</option>
+                                <option value="2AC">2AC (2-tier AC)</option>
+                                <option value="1AC">1AC (First AC)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="quota">Quota</label>
+                            <select id="quota" required onchange="calculateFare()">
+                                <option value="NONE">NONE</option>
+                                <option value="ARMY">ARMY (50% Discount)</option>
+                                <option value="DISABLED">DISABLED (40% Discount)</option>
+                                <option value="LADIES">LADIES (20% Discount)</option>
+                                <option value="SENIOR">SENIOR (30% Discount)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="seats">Number of Seats</label>
+                            <input type="number" id="seats" value="1" min="1" max="10" required onchange="calculateFare()">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Book Ticket</button>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <h2>💰 Fare Details</h2>
+                    <div class="fare-display">
+                        <h3>Calculation</h3>
+                        <div class="fare-row">
+                            <span class="label">Distance:</span>
+                            <span class="value" id="distance">0 KM</span>
+                        </div>
+                        <div class="fare-row">
+                            <span class="label">Rate per KM:</span>
+                            <span class="value">₹2.00</span>
+                        </div>
+                        <div class="fare-row">
+                            <span class="label">Base Fare:</span>
+                            <span class="value" id="baseFare">₹0.00</span>
+                        </div>
+                        <div class="fare-row">
+                            <span class="label">Class Multiplier:</span>
+                            <span class="value" id="multiplier">1x</span>
+                        </div>
+                        <div class="fare-row">
+                            <span class="label">Quota Discount:</span>
+                            <span class="value" id="discount">0%</span>
+                        </div>
+                        <hr style="margin: 15px 0; border: none; border-top: 2px solid #ddd;">
+                        <div class="fare-row" style="font-size: 1.3em;">
+                            <span class="label">Final Fare:</span>
+                            <span class="value" id="finalFare">₹0.00</span>
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <h4>📋 Class Information</h4>
+                        <p><strong>SL:</strong> 1x Multiplier</p>
+                        <p><strong>3AC:</strong> 1.5x Multiplier</p>
+                        <p><strong>2AC:</strong> 2x Multiplier</p>
+                        <p><strong>1AC:</strong> 3x Multiplier</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trains Tab -->
+        <div id="trains" class="tab-content">
+            <div class="card">
+                <h2>🚆 Available Trains</h2>
+                <div id="trainsContainer"></div>
+            </div>
+        </div>
+
+        <!-- Bookings Tab -->
+        <div id="bookings" class="tab-content">
+            <div class="card">
+                <h2>📝 My Bookings</h2>
+                <div id="bookingsContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Train Data
+        const trains = {
+            101: {
+                name: "Central Local",
+                stations: { "Mumbai": 0, "Dadar": 10, "Kurla": 20, "Thane": 35, "Dombivli": 50, "Kalyan": 60 },
+                seats: { "SL": 10, "3AC": 5, "2AC": 3, "1AC": 2 },
+                rate_per_km: 2
+            },
+            202: {
+                name: "Harbour Local",
+                stations: { "Panvel": 0, "Belapur": 12, "Nerul": 22, "Vashi": 30, "Kurla": 45, "Mumbai": 55 },
+                seats: { "SL": 15, "3AC": 6, "2AC": 4, "1AC": 2 },
+                rate_per_km: 2
+            },
+            303: {
+                name: "Uran Local",
+                stations: { "Nerul": 0, "Seawoods Darave": 2, "Belapur": 4, "Bamandongri": 8, "Kharkopar": 12, "Nhava Sheva": 24, "Dronagiri": 27, "Uran": 30 },
+                seats: { "SL": 15, "3AC": 6, "2AC": 4, "1AC": 2 },
+                rate_per_km: 2
+            }
+        };
+
+        const quotaDiscounts = {
+            "NONE": 0,
+            "ARMY": 0.5,
+            "DISABLED": 0.4,
+            "LADIES": 0.2,
+            "SENIOR": 0.3
+        };
+
+        const classMultiplier = {
+            "SL": 1.0,
+            "3AC": 1.5,
+            "2AC": 2.0,
+            "1AC": 3.0
+        };
+
+        let bookings = [];
+
+        function switchTab(tab) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+
+            // Show selected tab
+            document.getElementById(tab).classList.add('active');
+            event.target.classList.add('active');
+
+            if (tab === 'trains') displayTrains();
+            if (tab === 'bookings') displayBookings();
+        }
+
+        function updateStations() {
+            const trainNo = document.getElementById('train_no').value;
+            const startSelect = document.getElementById('start');
+            const endSelect = document.getElementById('end');
+
+            startSelect.innerHTML = '<option value="">Select Start Station</option>';
+            endSelect.innerHTML = '<option value="">Select End Station</option>';
+
+            if (trainNo && trains[trainNo]) {
+                const stations = Object.keys(trains[trainNo].stations);
+                stations.forEach(station => {
+                    startSelect.innerHTML += `<option value="${station}">${station}</option>`;
+                    endSelect.innerHTML += `<option value="${station}">${station}</option>`;
+                });
+            }
+            calculateFare();
+        }
+
+        function calculateFare() {
+            const trainNo = document.getElementById('train_no').value;
+            const start = document.getElementById('start').value;
+            const end = document.getElementById('end').value;
+            const classType = document.getElementById('class').value;
+            const quota = document.getElementById('quota').value;
+            const seatCount = parseInt(document.getElementById('seats').value) || 1;
+
+            if (!trainNo || !start || !end || !classType) {
+                document.getElementById('distance').textContent = "0 KM";
+                document.getElementById('baseFare').textContent = "₹0.00";
+                document.getElementById('finalFare').textContent = "₹0.00";
+                document.getElementById('multiplier').textContent = "1x";
+                document.getElementById('discount').textContent = "0%";
+                return;
+            }
+
+            if (start === end) {
+                alert("Start and End stations must be different!");
+                document.getElementById('end').value = '';
+                return;
+            }
+
+            const train = trains[trainNo];
+            const startDist = train.stations[start];
+            const endDist = train.stations[end];
+            const distance = Math.abs(endDist - startDist);
+
+            const baseFarePerSeat = distance * train.rate_per_km;
+            const totalBaseFare = baseFarePerSeat * seatCount;
+            const multiplier = classMultiplier[classType] || 1;
+            const fareWithClass = totalBaseFare * multiplier;
+
+            const discountPercent = quotaDiscounts[quota] * 100;
+            const finalFare = fareWithClass * (1 - quotaDiscounts[quota]);
+
+            document.getElementById('distance').textContent = distance + " KM";
+            document.getElementById('baseFare').textContent = "₹" + totalBaseFare.toFixed(2);
+            document.getElementById('multiplier').textContent = multiplier + "x";
+            document.getElementById('discount').textContent = discountPercent + "%";
+            document.getElementById('finalFare').textContent = "₹" + finalFare.toFixed(2);
+        }
+
+        function bookTicket(event) {
+            event.preventDefault();
+
+            const passenger = document.getElementById('passenger').value;
+            const trainNo = document.getElementById('train_no').value;
+            const start = document.getElementById('start').value;
+            const end = document.getElementById('end').value;
+            const classType = document.getElementById('class').value;
+            const quota = document.getElementById('quota').value;
+            const seatCount = parseInt(document.getElementById('seats').value);
+
+            const train = trains[trainNo];
+            if (train.seats[classType] < seatCount) {
+                alert(`Not enough seats! Only ${train.seats[classType]} available in ${classType}`);
+                return;
+            }
+
+            const startDist = train.stations[start];
+            const endDist = train.stations[end];
+            const distance = Math.abs(endDist - startDist);
+            const baseFare = distance * train.rate_per_km * seatCount;
+            const fare = baseFare * classMultiplier[classType];
+            const finalFare = fare * (1 - quotaDiscounts[quota]);
+
+            train.seats[classType] -= seatCount;
+
+            const booking = {
+                passenger,
+                train: train.name,
+                trainNo,
+                from: start,
+                to: end,
+                class: classType,
+                quota,
+                seats: seatCount,
+                fare: finalFare.toFixed(2)
+            };
+
+            bookings.push(booking);
+
+            // Show success message
+            const successMsg = document.getElementById('successMsg');
+            successMsg.classList.add('show');
+            setTimeout(() => successMsg.classList.remove('show'), 3000);
+
+            // Reset form
+            document.querySelector('form').reset();
+            calculateFare();
+
+            alert(`✓ Ticket booked successfully for ${passenger}!\nFinal Fare: ₹${finalFare.toFixed(2)}`);
+        }
+
+        function displayTrains() {
+            const container = document.getElementById('trainsContainer');
+            container.innerHTML = '';
+
+            Object.entries(trains).forEach(([trainNo, train]) => {
+                const stationsHtml = Object.entries(train.stations)
+                    .map(([station, dist]) => `<span style="display: inline-block; margin-right: 15px;">🏢 ${station} (${dist} KM)</span>`)
+                    .join('');
+
+                const seatsHtml = Object.entries(train.seats)
+                    .map(([classType, count]) => `<span style="display: inline-block; margin-right: 15px;">💺 ${classType}: ${count}</span>`)
+                    .join('');
+
+                container.innerHTML += `
+                    <div class="train-card">
+                        <h3>🚆 ${trainNo} - ${train.name}</h3>
+                        <div class="train-info">
+                            <p><strong>Stations on Route:</strong></p>
+                            <p>${stationsHtml}</p>
+                            <p><strong>Available Seats:</strong></p>
+                            <p>${seatsHtml}</p>
+                            <p><strong>Rate:</strong> ₹${train.rate_per_km} per KM</p>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function displayBookings() {
+            const container = document.getElementById('bookingsContainer');
+
+            if (bookings.length === 0) {
+                container.innerHTML = '<div class="no-data">No bookings yet. Start booking your tickets!</div>';
+                return;
+            }
+
+            container.innerHTML = '';
+            bookings.forEach((booking, index) => {
+                container.innerHTML += `
+                    <div class="booking-item">
+                        <h4>🎫 Booking #${index + 1} - ${booking.passenger}</h4>
+                        <div class="booking-details">
+                            <p><strong>Train:</strong> ${booking.trainNo} - ${booking.train}</p>
+                            <p><strong>Route:</strong> ${booking.from} → ${booking.to}</p>
+                            <p><strong>Class:</strong> ${booking.class}</p>
+                            <p><strong>Quota:</strong> ${booking.quota}</p>
+                            <p><strong>Seats:</strong> ${booking.seats}</p>
+                            <p><strong>Final Fare:</strong> ₹${booking.fare}</p>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', displayTrains);
+    </script>
+</body>
+</html>
